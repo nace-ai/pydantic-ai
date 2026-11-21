@@ -3886,7 +3886,7 @@ def infer_model(  # noqa: C901
         from .typesafe import TypeSafeModel
 
         return TypeSafeModel(model_name, provider=provider)
-    elif model_kind == 'system-one':
+    elif model_kind in ('system-one', 'nace'):
         from ..providers.system_one import SystemOneProvider
         from .system_one import SystemOneModel
 

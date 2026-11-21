@@ -333,6 +333,10 @@ def infer_provider_class(provider: str) -> type[Provider[Any]]:  # noqa: C901
             from .system_one import SystemOneProvider
 
             return SystemOneProvider
+        case 'nace':
+            from .nace import NaceProvider
+
+            return NaceProvider
         case 'crusoe':
             from .crusoe import CrusoeProvider
 
