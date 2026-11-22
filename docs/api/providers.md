@@ -106,4 +106,6 @@
 
 ::: pydantic_ai.providers.system_one.SystemOneProvider
 
+::: pydantic_ai.providers.nace.NaceProvider
+
 ::: pydantic_ai.providers.zai.ZaiProvider

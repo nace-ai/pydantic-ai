@@ -83,6 +83,7 @@ class SystemOneModel(DecisionModel[httpx2.AsyncClient]):
     _model_name: SystemOneModelName = field(repr=False)
     _provider: Provider[httpx2.AsyncClient] = field(repr=False)
     _api_key: str | None = field(repr=False)
+    _headers: dict[str, str] = field(repr=False)
 
     def __init__(
         self,
@@ -105,6 +106,7 @@ class SystemOneModel(DecisionModel[httpx2.AsyncClient]):
             provider = SystemOneProvider()
         self._provider = provider
         self._api_key = provider.api_key
+        self._headers = provider._request_headers  # pyright: ignore[reportPrivateUsage]
         super().__init__(settings=settings, profile=profile)
 
     @property
@@ -195,7 +197,8 @@ class SystemOneModel(DecisionModel[httpx2.AsyncClient]):
         timeout = model_settings.get('timeout')
         url = f'{self.base_url}/systemone' if self.base_url.endswith('/v1') else f'{self.base_url}/v1/systemone'
         try:
-            headers = httpx2.Headers(model_settings.get('extra_headers') or {})
+            headers = httpx2.Headers(self._headers)
+            headers.update(model_settings.get('extra_headers') or {})
             if self._api_key is not None and 'Authorization' not in headers:
                 headers['Authorization'] = f'Bearer {self._api_key}'
             return self.client.build_request(

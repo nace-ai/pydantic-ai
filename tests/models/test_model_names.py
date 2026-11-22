@@ -16,6 +16,7 @@ from typing_extensions import TypedDict
 from pydantic_ai._warnings import PydanticAIDeprecationWarning
 from pydantic_ai.models import KnownModelName, infer_model_profile, known_model_names
 from pydantic_ai.providers.gateway import ModelProvider as GatewayModelProvider
+from pydantic_ai.providers.nace import NaceModelName
 
 from ..conftest import try_import
 
@@ -94,6 +95,7 @@ _PROVIDER_TO_MODEL_NAMES = {
     'meta': MetaModelName,
     'mistral': MistralModelName,
     'moonshotai': MoonshotAIModelName,
+    'nace': NaceModelName,
     'openai': OpenAIModelName,
     'openai-chat': OpenAIModelName,
     'openai-decisions': OpenAIDecisionsModelName,
