@@ -37,6 +37,11 @@ class SystemOneProvider(Provider[httpx2.AsyncClient]):
         """The key sent as a bearer token, if the API needs one."""
         return self._api_key
 
+    @property
+    def _request_headers(self) -> dict[str, str]:
+        """Provider wire-format defaults, applied per request without mutating the HTTP client."""
+        return {}
+
     @staticmethod
     def model_profile(model_name: str) -> ModelProfile | None:
         return decision_model_profile(model_name)

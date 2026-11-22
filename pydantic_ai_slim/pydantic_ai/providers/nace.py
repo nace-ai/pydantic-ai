@@ -5,9 +5,9 @@ from typing import Literal
 
 import httpx2
 
-from pydantic_ai.exceptions import UserError
 from pydantic_ai.profiles import ModelProfile, merge_profile
 from pydantic_ai.profiles.decision import DecisionModelProfile, decision_model_profile
+from pydantic_ai.providers import missing_api_key_error
 from pydantic_ai.providers.system_one import SystemOneProvider
 
 NaceModelName = Literal['drex-max-finance', 'drex-max-v1.1', 'drex-v2.0'] | str
@@ -24,6 +24,11 @@ class NaceProvider(SystemOneProvider):
     @property
     def name(self) -> str:
         return 'nace'
+
+    @property
+    def _request_headers(self) -> dict[str, str]:
+        # SystemOneModel validates score legends as objects; Drex otherwise sends arrays.
+        return {'X-Nace-Legend': 'object'}
 
     @staticmethod
     def model_profile(model_name: str) -> ModelProfile:
@@ -52,5 +57,7 @@ class NaceProvider(SystemOneProvider):
         """
         api_key = api_key or os.getenv('NACE_API_KEY')
         if not api_key:
-            raise UserError('Set `NACE_API_KEY` or pass `NaceProvider(api_key=...)` to authenticate with Nace.')
+            raise missing_api_key_error(
+                'Set `NACE_API_KEY` or pass `NaceProvider(api_key=...)` to authenticate with Nace.'
+            )
         super().__init__(base_url=base_url, api_key=api_key, http_client=http_client)
